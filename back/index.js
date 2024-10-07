@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { dbConfig } from './src/config/dbConfig.js';
 import {errorHandler} from './src/utils/errorHandler.js';
+import MenuRoutes from './src/routes/menuRoutes.js';
 
 dotenv.config();
 
@@ -19,7 +20,7 @@ app.get('/',(req,res) => {
 })
 
 
-app.use('/api/permissions', PermissionRoutes)
+app.use('/api/menu', MenuRoutes)
 
 app.use(errorHandler);
 
