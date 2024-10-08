@@ -1,46 +1,37 @@
-import React from "react";
+import Input from "../atoms/input.js";
 
-function MenuForm() {
-  return (
-    <div className="p-4 bg-gray-50 rounded-md">
-      <div className="mb-4">
-        <label className="block text-gray-700">Menu ID</label>
-        <input
-          type="text"
-          value="5632e09f-6e16-71e6-a70a-722afefde4e9"
-          readOnly
-          className="w-full border-gray-300 rounded p-2"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Depth</label>
-        <input
-          type="text"
-          value="3"
-          readOnly
-          className="w-full border-gray-300 rounded p-2"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Parent Data</label>
-        <input
-          type="text"
-          value="Systems"
-          readOnly
-          className="w-full border-gray-300 rounded p-2"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Name</label>
-        <input
-          type="text"
-          value="System Code"
-          className="w-full border-gray-300 rounded p-2"
-        />
-      </div>
-      <button className="bg-blue-600 text-white p-2 rounded">Save</button>
-    </div>
-  );
+const menuForm = () => {
+    return (
+        <div className="mt-10 md:mt-0">
+            <Input
+            label={"MenuID"}
+            type={"text"}
+            placeholder={"5632e09f-6e16-71e6-a70a-722afefde4e9"}
+            name={"MenuID"}
+            id={"MenuID"}
+            />
+            <Input
+            label={"Depth"}
+            type={"number"}
+            placeholder={3}
+            name={"Depth"}
+            id={"Depth"}
+            />
+            <Input
+            label={"ParentData"}
+            type={"text"}
+            placeholder={"Systems"}
+            name={"ParentData"}
+            />
+            <Input
+            label={"Name"}
+            type={"text"}
+            placeholder={"System Code"}
+            name={"Name"}
+            />
+            <button className="bg-[#253BFF] text-white p-2 mt-4 rounded-2xl w-[20rem]">Save</button>
+        </div>
+    )
 }
 
-export default MenuForm;
+export default menuForm;

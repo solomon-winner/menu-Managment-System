@@ -1,25 +1,79 @@
-import React from "react";
+import { FiFolder, FiGrid } from "react-icons/fi";
+import { FaFolder } from "react-icons/fa6";
+import { MdMenuOpen } from "react-icons/md";
+import { useState, useEffect } from "react";
+import { RiMenuUnfold3Line } from "react-icons/ri";
+import Menu from "../atoms/menu";
 
-function Sidebar() {
-  return (
-    <div className="bg-gray-900 text-white h-screen w-64 flex flex-col">
-      <div className="flex items-center p-4">
-        <span className="text-lg font-bold">CQIT</span>
+const menuItems = [
+  { icon: <FaFolder />, text: "System" },
+  { icon: <FiGrid />, text: "System Code" },
+  { icon: <FiGrid />, text: "Properties" },
+  { icon: <FiGrid />, text: "Menus" },
+  { icon: <FiGrid />, text: "API List" },
+  { icon: <FiFolder />, text: "Users & Group" },
+  { icon: <FiFolder />, text: "Competitions" },
+];
+
+const SideBar = () => {
+  const [isOpen, setOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  const handleToggle = () => {
+    setOpen(!isOpen);
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  if (isMobile) {
+    return (
+      <div className="px-8 mt-6">
+        <RiMenuUnfold3Line
+          className="text-xl cursor-pointer text-black"
+          onClick={handleToggle}
+        />
+        {isOpen && (
+          <div className="absolute top-0 left-0 w-56 h-[91%] bg-primary rounded-xl m-2 text-white py-3 px-4">
+            <div className="flex justify-between items-center">
+              <h1 className="">
+                <span className="underline font-bold">CLo</span>IT
+              </h1>
+              <MdMenuOpen onClick={handleToggle} className="cursor-pointer" />
+            </div>
+            <div className="mt-5">
+              {menuItems.map((item) => (
+                <Menu key={item.text} icon={item.icon} text={item.text} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
-      <nav className="flex-grow">
-        <ul className="space-y-2 px-4">
-          <li className="bg-gray-800 p-2 rounded text-white">
-            <span>Systems</span>
-          </li>
-          <li className="p-2 rounded text-gray-400 hover:text-white">Properties</li>
-          <li className="bg-green-500 p-2 rounded text-white">Menus</li>
-          <li className="p-2 rounded text-gray-400 hover:text-white">API List</li>
-          <li className="p-2 rounded text-gray-400 hover:text-white">Users & Groups</li>
-          <li className="p-2 rounded text-gray-400 hover:text-white">Competition</li>
-        </ul>
-      </nav>
+    );
+  }
+
+  return (
+    <div className={`w-56 h-[42rem] bg-primary rounded-xl m-2 text-white py-3 px-4 ${isOpen ? "" : "hidden md:block"}`}>
+      <div className="flex justify-between items-center">
+        <h1 className="">
+          <span className="underline font-bold">CLo</span>IT
+        </h1>
+        <MdMenuOpen onClick={handleToggle} className="cursor-pointer" />
+      </div>
+      <div className="mt-5">
+        {menuItems.map((item) => (
+          <Menu key={item.text} icon={item.icon} text={item.text} />
+        ))}
+      </div>
     </div>
   );
-}
+};
 
-export default Sidebar;
+export default SideBar;

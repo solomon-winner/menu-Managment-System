@@ -9,10 +9,6 @@ const MenuTree = () => {
 
   return (
     <div className="p-4">
-      <div className="flex items-center space-x-2">
-        <button className="bg-gray-300 p-2 rounded">Expand All</button>
-        <button className="bg-gray-300 p-2 rounded">Collapse All</button>
-      </div>
 
       <Tree
         showLine={{ showLeafIcon: false }}

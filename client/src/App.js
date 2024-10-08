@@ -33,9 +33,9 @@ import MenuManager from './components/organisms/menuManager.js';
 
 function App() {
   return (
-    <div className="flex h-screen">
+    <div className="flex flex-1 flex-col md:flex-row overflow-hidden">
       <Sidebar />
-      <div className="flex-1">
+      <div className="flex-1 p-4 bg-gray overflow-y-auto">
         <MenuManager />
       </div>
     </div>
@@ -43,3 +43,5 @@ function App() {
 }
 
 export default App;
+
+
