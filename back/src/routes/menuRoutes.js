@@ -142,6 +142,25 @@ router.post('/', addMenuItem);
  *         description: Bad request
  */
 router.put('/:id', updateMenuItem);
+/**
+ * @swagger
+ * /menus/{id}:
+ *   delete:
+ *     summary: Delete a menu by id
+ *     tags: [Menus]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The menu id
+ *     responses:
+ *       200:
+ *         description: The menu was successfully deleted
+ *       404:
+ *         description: The menu was not found
+ */
 router.delete('/:id', deleteMenuItem);
 
 export default router;
