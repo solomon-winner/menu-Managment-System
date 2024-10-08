@@ -1,18 +1,17 @@
-import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { menuState } from '../state/state.js';
+import { useQuery } from '@tanstack/react-query';
 import { fetchMenus } from '../utils/api';
+import { menuState } from '../state/state';
 
 export const useMenus = () => {
   const setMenus = useSetRecoilState(menuState);
 
-  const { data: menus, isLoading, error } = useQuery({
-    queryKey: ['menus'],
-    queryFn: fetchMenus,
+  const { data, isLoading, error } = useQuery('menus', fetchMenus, {
     onSuccess: (data) => {
-      setMenus(data); // Update Recoil state with fetched data
+      setMenus(data);
     },
   });
 
-  return { menus, isLoading, error };
+  return { menus: data, isLoading, error };
 };
