@@ -29,17 +29,17 @@ export const getMenu = async (req, res, next) => {
 export const addMenuItem = async (req, res, next) => {
     const { name, parentId, depth } = req.body;
     if (!name) {
-        return next(new BadRequestError('Name is required'));
+        return next(new BadRequest('Name is required'));
     }
 
-    const newMenuItem = new MenuItem({ name, parentId , depth });
+    const newMenuItem = new MenuItem({ name, parentId, depth });
 
     try {
         const savedMenuItem = await newMenuItem.save();
         if (parentId) {
             const parent = await MenuItem.findById(parentId);
             if (!parent) {
-                return next(new NotFoundError('Parent menu not found'));
+                return next(new NotFound('Parent menu not found'));
             }
             parent.children.push(savedMenuItem._id);
             await parent.save();
@@ -51,20 +51,31 @@ export const addMenuItem = async (req, res, next) => {
     }
 };
 
-
 export const updateMenuItem = async (req, res, next) => {
     const { id } = req.params;
-    const { name } = req.body;
+    const { name, parentId, depth } = req.body;
 
     if (!name) {
-        return next(new BadRequestError('Name is required'));
+        return next(new BadRequest('Name is required'));
     }
 
     try {
-        const updatedMenuItem = await MenuItem.findByIdAndUpdate(id, { name }, { new: true });
+        const updatedMenuItem = await MenuItem.findByIdAndUpdate(id, { name, parentId, depth }, { new: true });
         if (!updatedMenuItem) {
-            return next(new NotFoundError('Menu item not found'));
+            return next(new NotFound('Menu item not found'));
         }
+
+        if (parentId) {
+            const parent = await MenuItem.findById(parentId);
+            if (!parent) {
+                return next(new NotFound('Parent menu not found'));
+            }
+            if (!parent.children.includes(updatedMenuItem._id)) {
+                parent.children.push(updatedMenuItem._id);
+                await parent.save();
+            }
+        }
+
         const menuDTO = MenuDTO.fromMenuItem(updatedMenuItem);
         return ResponseHelper.success(res, 'Menu item updated successfully', menuDTO);
     } catch (error) {
@@ -78,8 +89,21 @@ export const deleteMenuItem = async (req, res, next) => {
     try {
         const menuItem = await MenuItem.findById(id);
         if (!menuItem) {
-            return next(new NotFoundError('Menu item not found'));
+            return next(new NotFound('Menu item not found'));
         }
+
+        const deleteChildren = async (children) => {
+            for (const childId of children) {
+                const child = await MenuItem.findById(childId);
+                if (child) {
+                    await deleteChildren(child.children);
+                    await MenuItem.findByIdAndDelete(childId);
+                }
+            }
+        };
+
+        await deleteChildren(menuItem.children);
+
         if (menuItem.parentId) {
             const parent = await MenuItem.findById(menuItem.parentId);
             if (parent) {
@@ -87,8 +111,9 @@ export const deleteMenuItem = async (req, res, next) => {
                 await parent.save();
             }
         }
+
         await MenuItem.findByIdAndDelete(id);
-        return ResponseHelper.success(res, 'Menu item deleted successfully');
+        return ResponseHelper.success(res, 'Menu item and its children deleted successfully');
     } catch (error) {
         next(error);
     }
