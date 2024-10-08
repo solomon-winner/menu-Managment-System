@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import dummyMenus from '../data/dummyMenus'; 
+import dummyMenus from '../utils/dummyMenus.js'; 
 
 export const menuState = atom({
   key: 'menuState',

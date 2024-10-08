@@ -1,25 +1,35 @@
 import React from 'react';
-import { useRecoilState } from 'recoil';
-import { menuState } from '../state/state.js'; // Adjust the path accordingly
+import { useRecoilValue } from 'recoil';
+import { menuState } from '../state';
 
-const Menu = () => {
-  const [menus, setMenus] = useRecoilState(menuState);
-
-  const addMenu = (newMenu) => {
-    setMenus((prevMenus) => [...prevMenus, newMenu]);
-  };
+const MenuComponent = () => {
+  const menus = useRecoilValue(menuState);
 
   return (
     <div>
       <h2>Menus</h2>
       <ul>
-        {menus.map((menu, index) => (
-          <li key={index}>{menu.name}</li>
+        {menus.map((menu) => (
+          <MenuItem key={menu.id} item={menu} />
         ))}
       </ul>
-      <button onClick={() => addMenu({ name: 'New Menu' })}>Add Menu</button>
     </div>
   );
 };
 
-export default Menu;
+const MenuItem = ({ item }) => {
+  return (
+    <li>
+      {item.name}
+      {item.children && item.children.length > 0 && (
+        <ul>
+          {item.children.map((child) => (
+            <MenuItem key={child.id} item={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+};
+
+export default MenuComponent;
