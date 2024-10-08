@@ -19,7 +19,6 @@ const MenuTree = () => {
   const [parentItem, setParentItem] = useState(null); 
   const [depth, setDepth] = useState(0); 
   
-  console.log('Tree Data:', treeData); 
   
   const calculateDepth = (node, currentDepth = 0) => {
     if (!node.parentId) return currentDepth;
@@ -33,20 +32,20 @@ const MenuTree = () => {
   
   const handleSelect = (selectedKeys, info) => {
     setSelectedItem(info.node); 
-    console.log("check info", info)
     setFormVisibility(true);
+    setParentItem(info.node); 
+    setDepth(calculateDepth(info.node) + 1); 
+    console.log("parent item", parentItem,depth)
   };
   
-  const handleAddClick = (node) => {
-    console.log('Add clicked for node:', node);
-    setParentItem(node); 
-    setDepth(calculateDepth(node) + 1); 
+  const handleAddClick = () => {
+     setSelectedItem({parentId: parentItem.key, depth: depth})
     setFormVisibility(true); 
+    console.log('Add clicked for node:', selectedItem);
+
   };
   
-  const handleDeleteClick = (node) => {
-    console.log('Deleting node with key:', node, typeof(node.key));
-  
+  const handleDeleteClick = (node) => {  
     if (!node.key) {
       console.error('Node key is undefined');
       return;
@@ -80,17 +79,14 @@ const MenuTree = () => {
       <span className="mr-4">{node.title}</span>
       {selectedItem && selectedItem.key === node.key && ( 
         <div className="flex space-x-4">
-          <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#253BFF] text-white">
-            <PlusOutlined onClick={() => handleAddClick(node)} />
-          </div>
-          <DeleteOutlined onClick={() => handleDeleteClick(node)} />
+          <DeleteOutlined title = "delete the item" onClick={() => handleDeleteClick(node)} />
         </div>
       )}
     </div>
   );
   
   return (
-    <div className="p-4">
+    <div className="flex">
       <Tree
         showLine={{ showLeafIcon: false }}
         expandedKeys={expandedKeys}
@@ -102,6 +98,9 @@ const MenuTree = () => {
         treeData={treeData}
         titleRender={titleRender}
       />
+           <div  onClick={() => handleAddClick()}  className="flex items-center justify-center w-6 h-6 rounded-full bg-[#253BFF] text-white">
+            <PlusOutlined title='add child item to this menu'/>
+          </div>
     </div>
   );
 };

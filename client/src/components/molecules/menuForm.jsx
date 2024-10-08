@@ -17,8 +17,7 @@ const MenuForm = () => {
 
   useEffect(() => {
     if (selectedItem) {
-      console.log("======>",selectedItem)
-      setMenuId(selectedItem.key || ''); 
+      setMenuId(selectedItem.key || ""); 
       setDepth(selectedItem.depth || 0);
       setParentData(selectedItem.parentId || '');
       setName(selectedItem.title || '');
@@ -40,7 +39,7 @@ const MenuForm = () => {
       depth,
     };
 
-    if (menuId) {
+    if (menuId !== "" ) {
       updateMenuMutation.mutate({ id: menuId, name }, {
         onSuccess: (data) => {
           setMenus((prevMenus) => {
@@ -83,7 +82,7 @@ const MenuForm = () => {
       <Input
         label={"MenuID"}
         type={"text"}
-        value={menuId}
+        value={menuId? menuId: "you don't have to enter Id!"}
         onChange={(e) => setMenuId(e.target.value)}
         name={"MenuID"}
         id={"MenuID"}
