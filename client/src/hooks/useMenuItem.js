@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import { fetchMenus } from '../utils/api'; 
 
-const fetchMenuItems = async () => {
-  const { data } = await axios.get('/api/menus');
-  return data;
-};
+export const useMenus = () => {
+  const { data: menus, isLoading, error } = useQuery({
+    queryKey: ['menus'], 
+    queryFn: fetchMenus, 
+  });
 
-export const useMenuItems = () => {
-  return useQuery(['menuItems'], fetchMenuItems);
+  return { menus, isLoading, error };
 };
