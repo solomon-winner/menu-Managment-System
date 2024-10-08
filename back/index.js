@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { dbConfig } from './src/config/dbConfig.js';
 import {errorHandler} from './src/utils/errorHandler.js';
 import MenuRoutes from './src/routes/menuRoutes.js';
+import swaggerDocs from './src/config/swaggerConfig.js';
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.get('/',(req,res) => {
 
 app.use('/api/menus', MenuRoutes)
 
+swaggerDocs(app);
 app.use(errorHandler);
 
 app.listen(
