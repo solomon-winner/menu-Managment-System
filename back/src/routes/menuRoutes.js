@@ -11,10 +11,11 @@ const router = express.Router();
  *       type: object
  *       required:
  *         - name
+ *         - menuId
  *       properties:
- *         id:
+ *         menuId:
  *           type: string
- *           description: The auto-generated id of the menu
+ *           description: The id of the menu
  *         name:
  *           type: string
  *           description: The name of the menu
@@ -24,17 +25,11 @@ const router = express.Router();
  *         parentId:
  *           type: string
  *           description: The id of the parent menu
- *         children:
- *           type: array
- *           items:
- *             type: string
- *           description: The ids of the child menus
  *       example:
- *         id: d5fE_asz
+ *         menuId: d5fE_asz
  *         name: Main Menu
  *         depth: 1
  *         parentId: null
- *         children: []
  */
 
 /**

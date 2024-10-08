@@ -35,7 +35,6 @@ export const addMenuItem = async (req, res, next) => {
     const newMenuItem = new MenuItem({ name, menuId, parentId, depth });
 
     try {
-        const savedMenuItem = await newMenuItem.save();
         if (parentId) {
             const parent = await MenuItem.findById(parentId);
             if (!parent) {
@@ -43,7 +42,9 @@ export const addMenuItem = async (req, res, next) => {
             }
             parent.children.push(menuId);
             await parent.save();
+            return ResponseHelper.success(res, 'Menu item added successfully', menuDTO, 201);
         }
+        const savedMenuItem = await newMenuItem.save();
         const menuDTO = MenuDTO.fromMenuItem(savedMenuItem);
         return ResponseHelper.success(res, 'Menu item added successfully', menuDTO, 201);
     } catch (error) {
