@@ -53,27 +53,16 @@ export const addMenuItem = async (req, res, next) => {
 
 export const updateMenuItem = async (req, res, next) => {
     const { id } = req.params;
-    const { name, parentId, depth } = req.body;
+    const { name } = req.body;
 
     if (!name) {
         return next(new BadRequest('Name is required'));
     }
 
     try {
-        const updatedMenuItem = await MenuItem.findByIdAndUpdate(id, { name, parentId, depth }, { new: true });
+        const updatedMenuItem = await MenuItem.findByIdAndUpdate(id, { name }, { new: true });
         if (!updatedMenuItem) {
             return next(new NotFound('Menu item not found'));
-        }
-
-        if (parentId) {
-            const parent = await MenuItem.findById(parentId);
-            if (!parent) {
-                return next(new NotFound('Parent menu not found'));
-            }
-            if (!parent.children.includes(updatedMenuItem._id)) {
-                parent.children.push(updatedMenuItem._id);
-                await parent.save();
-            }
         }
 
         const menuDTO = MenuDTO.fromMenuItem(updatedMenuItem);
@@ -82,7 +71,6 @@ export const updateMenuItem = async (req, res, next) => {
         next(error);
     }
 };
-
 export const deleteMenuItem = async (req, res, next) => {
     const { id } = req.params;
 

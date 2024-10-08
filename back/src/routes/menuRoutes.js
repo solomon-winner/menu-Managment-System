@@ -129,7 +129,13 @@ router.post('/', addMenuItem);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Menu'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: The name of the menu item
+ *             required:
+ *               - name
  *     responses:
  *       200:
  *         description: The menu was successfully updated
@@ -142,6 +148,7 @@ router.post('/', addMenuItem);
  *       400:
  *         description: Bad request
  */
+
 router.put('/:id', updateMenuItem);
 
 /**
