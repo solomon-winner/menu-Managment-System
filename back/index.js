@@ -20,7 +20,7 @@ app.get('/',(req,res) => {
 })
 
 
-app.use('/api/menu', MenuRoutes)
+app.use('/api/menus', MenuRoutes)
 
 app.use(errorHandler);
 

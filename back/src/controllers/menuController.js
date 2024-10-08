@@ -1,25 +1,29 @@
 import MenuItem from '../models/menuItem.js';
+import ResponseHelper from '../utils/responseHelper.js';
 
-export const getMenus = async (req, res) => {
+export const getMenus = async (req, res, next) => {
     try {
         const menus = await MenuItem.find().populate('children');
-        res.status(200).json(menus);
+        return ResponseHelper.success(res, 'Menus retrieved successfully', menus);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        next(error);
     }
 };
 
-export const getMenu = async (req, res) => {
+export const getMenu = async (req, res, next) => {
     const { id } = req.params;
     try {
         const menu = await MenuItem.findById(id).populate('children');
-        res.status(200).json(menu);
+        if (!menu) {
+            return next(new NotFoundError('Menu not found'));
+        }
+        return ResponseHelper.success(res, 'Menu retrieved successfully', menu);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        next(error);
     }
 };
 
-export const addMenuItem = async (req, res) => {
+export const addMenuItem = async (req, res, next) => {
     const { name, parentId } = req.body;
     const newMenuItem = new MenuItem({ name, parentId });
 
@@ -27,40 +31,51 @@ export const addMenuItem = async (req, res) => {
         const savedMenuItem = await newMenuItem.save();
         if (parentId) {
             const parent = await MenuItem.findById(parentId);
+            if (!parent) {
+                return next(new NotFoundError('Parent menu not found'));
+            }
             parent.children.push(savedMenuItem._id);
             await parent.save();
         }
-        res.status(201).json(savedMenuItem);
+        return ResponseHelper.success(res, 'Menu item added successfully', savedMenuItem, 201);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        next(error);
     }
 };
 
-export const updateMenuItem = async (req, res) => {
+export const updateMenuItem = async (req, res, next) => {
     const { id } = req.params;
     const { name } = req.body;
 
     try {
         const updatedMenuItem = await MenuItem.findByIdAndUpdate(id, { name }, { new: true });
-        res.status(200).json(updatedMenuItem);
+        if (!updatedMenuItem) {
+            return next(new NotFoundError('Menu item not found'));
+        }
+        return ResponseHelper.success(res, 'Menu item updated successfully', updatedMenuItem);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        next(error);
     }
 };
 
-export const deleteMenuItem = async (req, res) => {
+export const deleteMenuItem = async (req, res, next) => {
     const { id } = req.params;
 
     try {
         const menuItem = await MenuItem.findById(id);
+        if (!menuItem) {
+            return next(new NotFoundError('Menu item not found'));
+        }
         if (menuItem.parentId) {
             const parent = await MenuItem.findById(menuItem.parentId);
-            parent.children.pull(menuItem._id);
-            await parent.save();
+            if (parent) {
+                parent.children.pull(menuItem._id);
+                await parent.save();
+            }
         }
         await MenuItem.findByIdAndDelete(id);
-        res.status(200).json({ message: 'Menu item deleted' });
+        return ResponseHelper.success(res, 'Menu item deleted successfully');
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        next(error);
     }
 };
