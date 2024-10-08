@@ -33,6 +33,7 @@ const MenuTree = () => {
   
   const handleSelect = (selectedKeys, info) => {
     setSelectedItem(info.node); 
+    console.log("check info", info)
     setFormVisibility(true);
   };
   

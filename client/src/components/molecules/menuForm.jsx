@@ -17,7 +17,8 @@ const MenuForm = () => {
 
   useEffect(() => {
     if (selectedItem) {
-      setMenuId(selectedItem.id || ''); 
+      console.log("======>",selectedItem)
+      setMenuId(selectedItem.key || ''); 
       setDepth(selectedItem.depth || 0);
       setParentData(selectedItem.parentId || '');
       setName(selectedItem.title || '');
