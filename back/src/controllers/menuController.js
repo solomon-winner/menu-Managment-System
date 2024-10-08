@@ -27,12 +27,12 @@ export const getMenu = async (req, res, next) => {
 };
 
 export const addMenuItem = async (req, res, next) => {
-    const { name, parentId, depth } = req.body;
-    if (!name) {
+    const { name, menuId, parentId, depth } = req.body;
+    if (!name || !menuId) {
         return next(new BadRequest('Name is required'));
     }
 
-    const newMenuItem = new MenuItem({ name, parentId, depth });
+    const newMenuItem = new MenuItem({ name, menuId, parentId, depth });
 
     try {
         const savedMenuItem = await newMenuItem.save();
@@ -41,7 +41,7 @@ export const addMenuItem = async (req, res, next) => {
             if (!parent) {
                 return next(new NotFound('Parent menu not found'));
             }
-            parent.children.push(savedMenuItem._id);
+            parent.children.push(menuId);
             await parent.save();
         }
         const menuDTO = MenuDTO.fromMenuItem(savedMenuItem);

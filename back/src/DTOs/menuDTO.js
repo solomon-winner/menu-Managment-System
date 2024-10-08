@@ -1,8 +1,9 @@
 class MenuDTO {
-    constructor({ id, name, parentId, children }) {
-      this.id = id;
+    constructor({ menuId, name, parentId, depth, children }) {
+      this.id = menuId;
       this.name = name;
       this.parentId = parentId;
+      this.depth = depth,
       this.children = children;
     }
   
@@ -12,6 +13,7 @@ class MenuDTO {
         name: menuItem.name,
         depth: menuItem.depth,
         parentId: menuItem.parentId,
+        depth: menuItem.depth,
         children: menuItem.children,
       });
     }
