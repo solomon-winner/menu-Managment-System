@@ -85,6 +85,30 @@ router.get('/', getMenus);
  */
 
 router.get('/:id', getMenu);
+
+
+/**
+ * @swagger
+ * /menus:
+ *   post:
+ *     summary: Create a new menu
+ *     tags: [Menus]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Menu'
+ *     responses:
+ *       201:
+ *         description: The menu was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Menu'
+ *       400:
+ *         description: Bad request
+ */
 router.post('/', addMenuItem);
 router.put('/:id', updateMenuItem);
 router.delete('/:id', deleteMenuItem);
