@@ -60,6 +60,30 @@ const router = express.Router();
 
 router.get('/', getMenus);
 
+/**
+ * @swagger
+ * /menus/{id}:
+ *   get:
+ *     summary: Get a menu by id
+ *     tags: [Menus]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The menu id
+ *     responses:
+ *       200:
+ *         description: The menu description by id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Menu'
+ *       404:
+ *         description: The menu was not found
+ */
+
 router.get('/:id', getMenu);
 router.post('/', addMenuItem);
 router.put('/:id', updateMenuItem);
