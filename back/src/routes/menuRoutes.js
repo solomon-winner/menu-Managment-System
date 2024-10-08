@@ -110,6 +110,37 @@ router.get('/:id', getMenu);
  *         description: Bad request
  */
 router.post('/', addMenuItem);
+/**
+ * @swagger
+ * /menus/{id}:
+ *   put:
+ *     summary: Update a menu by id
+ *     tags: [Menus]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The menu id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Menu'
+ *     responses:
+ *       200:
+ *         description: The menu was successfully updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Menu'
+ *       404:
+ *         description: The menu was not found
+ *       400:
+ *         description: Bad request
+ */
 router.put('/:id', updateMenuItem);
 router.delete('/:id', deleteMenuItem);
 
