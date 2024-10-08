@@ -1,18 +1,15 @@
 import { atom, selector } from 'recoil';
 
-// Atom to store the list of menu items
 export const menuItemsState = atom({
   key: 'menuItemsState',
   default: [],
 });
 
-// Atom to store the selected menu item
 export const selectedMenuItemState = atom({
   key: 'selectedMenuItemState',
   default: null,
 });
 
-// Selector to get the root menu items (items with no parent)
 export const rootMenuItemsState = selector({
   key: 'rootMenuItemsState',
   get: ({ get }) => {
@@ -21,7 +18,6 @@ export const rootMenuItemsState = selector({
   },
 });
 
-// Selector to get the children of a specific menu item
 export const menuItemChildrenState = selector({
   key: 'menuItemChildrenState',
   get: ({ get }) => {
