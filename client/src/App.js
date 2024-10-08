@@ -1,8 +1,8 @@
 import React from "react";
 import Sidebar from "./components/sideBar.js";
 import Header from "./components/header.js";
-import MenuTree from "./components/menuTree.jsx";
-import MenuForm from "./components/menuForm.jsx";
+import MenuTree from "./components/molecules/menuTree.jsx";
+import MenuForm from "./components/molecules/menuForm.jsx";
 
 function App() {
   return (
