@@ -27,12 +27,12 @@ export const getMenu = async (req, res, next) => {
 };
 
 export const addMenuItem = async (req, res, next) => {
-    const { name, parentId } = req.body;
+    const { name, parentId, depth } = req.body;
     if (!name) {
         return next(new BadRequestError('Name is required'));
     }
 
-    const newMenuItem = new MenuItem({ name, parentId });
+    const newMenuItem = new MenuItem({ name, parentId , depth });
 
     try {
         const savedMenuItem = await newMenuItem.save();

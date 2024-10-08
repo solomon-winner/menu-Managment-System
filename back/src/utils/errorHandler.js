@@ -1,13 +1,13 @@
 import ResponseHelper from './responseHelper.js';
-import pkg from 'http-errors';
+import createError from 'http-errors';
 import { logger } from './logger.js'; 
 
-const { NotFoundError, BadRequestError } = pkg;
+const { NotFound, BadRequest } = createError;
 export const errorHandler = (err, req, res, next) => {
-    if (err instanceof NotFoundError) {
+    if (err instanceof NotFound) {
         return ResponseHelper.error(res, 'Resource not found', [], 404);
     }
-    if (err instanceof BadRequestError) {
+    if (err instanceof BadRequest) {
         return ResponseHelper.error(res, err.message, [], err.statusCode);
     }
 

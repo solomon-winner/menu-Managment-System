@@ -2,6 +2,7 @@ import express from 'express';
 import { getMenus, getMenu, addMenuItem, updateMenuItem, deleteMenuItem } from '../controllers/menuController.js';
 
 const router = express.Router();
+
 /**
  * @swagger
  * components:
@@ -17,6 +18,9 @@ const router = express.Router();
  *         name:
  *           type: string
  *           description: The name of the menu
+ *         depth:
+ *           type: number
+ *           description: The depth of the menu
  *         parentId:
  *           type: string
  *           description: The id of the parent menu
@@ -28,10 +32,10 @@ const router = express.Router();
  *       example:
  *         id: d5fE_asz
  *         name: Main Menu
+ *         depth: 1
  *         parentId: null
  *         children: []
  */
-
 
 /**
  * @swagger
@@ -39,7 +43,6 @@ const router = express.Router();
  *   name: Menus
  *   description: The menu managing API
  */
-
 
 /**
  * @swagger
@@ -57,7 +60,6 @@ const router = express.Router();
  *               items:
  *                 $ref: '#/components/schemas/Menu'
  */
-
 router.get('/', getMenus);
 
 /**
@@ -83,9 +85,7 @@ router.get('/', getMenus);
  *       404:
  *         description: The menu was not found
  */
-
 router.get('/:id', getMenu);
-
 
 /**
  * @swagger
@@ -110,6 +110,7 @@ router.get('/:id', getMenu);
  *         description: Bad request
  */
 router.post('/', addMenuItem);
+
 /**
  * @swagger
  * /menus/{id}:
@@ -142,6 +143,7 @@ router.post('/', addMenuItem);
  *         description: Bad request
  */
 router.put('/:id', updateMenuItem);
+
 /**
  * @swagger
  * /menus/{id}:
