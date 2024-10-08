@@ -1,6 +1,6 @@
 import React from "react";
-import Sidebar from "./components/sideBar.js";
-import Header from "./components/header.js";
+import Sidebar from "./components/organisms/sideBar.js";
+import Header from "./components/organisms/header.js";
 import MenuTree from "./components/molecules/menuTree.jsx";
 import MenuForm from "./components/molecules/menuForm.jsx";
 
