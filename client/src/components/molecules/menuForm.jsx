@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { selectedItemState, menuState } from '../../state/state';
-import { useUpdateMenu } from '../../utils/api';
+import { useUpdateMenu, useCreateMenu } from '../../utils/api';
 import Input from "../atoms/input.js";
 
 const MenuForm = () => {
   const selectedItem = useRecoilValue(selectedItemState);
   const setMenus = useSetRecoilState(menuState);
   const updateMenuMutation = useUpdateMenu();
+  const createMenuMutation = useCreateMenu();
   const [menuId, setMenuId] = useState('');
   const [depth, setDepth] = useState(0);
   const [parentData, setParentData] = useState('');
@@ -16,44 +17,64 @@ const MenuForm = () => {
 
   useEffect(() => {
     if (selectedItem) {
-      console.log('Selected Item:', selectedItem); // Debugging statement
-      setMenuId(selectedItem.key); 
+      setMenuId(selectedItem.id || ''); 
       setDepth(selectedItem.depth || 0);
       setParentData(selectedItem.parentId || '');
       setName(selectedItem.title || '');
       setHasParent(!!selectedItem.parentId);
+    } else {
+      setMenuId('');
+      setDepth(0);
+      setParentData('');
+      setName('');
+      setHasParent(false);
     }
   }, [selectedItem]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Menu ID:', menuId); 
-    const updatedItem = {
-      name, menuId
+    const menuItem = {
+      name,
+      parentId: parentData,
+      depth,
     };
-    updateMenuMutation.mutate(updatedItem, {
-      onSuccess: (data) => {
-        setMenus((prevMenus) => {
-          const updateNode = (data, updatedItem) => {
-            return data.map(item => {
-              if (item.id === updatedItem.id) {
-                return { ...item, title: updatedItem.name }; 
-              }
-              if (item.children) {
-                item.children = updateNode(item.children, updatedItem);
-              }
-              return item;
-            });
-          };
 
-          const updatedData = updateNode(prevMenus.data, updatedItem);
-          return { data: updatedData };
-        });
-      },
-      onError: (error) => {
-        console.error('Failed to update menu item:', error);
-      },
-    });
+    if (menuId) {
+      updateMenuMutation.mutate({ id: menuId, name }, {
+        onSuccess: (data) => {
+          setMenus((prevMenus) => {
+            const updateNode = (data, updatedItem) => {
+              return data.map(item => {
+                if (item.id === updatedItem.id) {
+                  return { ...item, title: updatedItem.name };
+                }
+                if (item.children) {
+                  item.children = updateNode(item.children, updatedItem);
+                }
+                return item;
+              });
+            };
+
+            const updatedData = updateNode(prevMenus.data, { id: menuId, name });
+            return { data: updatedData };
+          });
+        },
+        onError: (error) => {
+          console.error('Failed to update menu item:', error);
+        },
+      });
+    } else {
+      createMenuMutation.mutate(menuItem, {
+        onSuccess: (data) => {
+          setMenus((prevMenus) => ({
+            data: [...prevMenus.data, data],
+          }));
+        },
+        onError: (error) => {
+          console.error('Failed to add menu item:', error);
+        },
+      });
+    }
   };
 
   return (
@@ -91,7 +112,9 @@ const MenuForm = () => {
         onChange={(e) => setName(e.target.value)}
         name={"Name"}
       />
-      <button className="bg-[#253BFF] text-white p-2 mt-4 rounded-2xl w-[20rem]">Save</button>
+      <button className="bg-[#253BFF] text-white p-2 mt-4 rounded-2xl w-[20rem]">
+        {menuId ? 'Update' : 'Add'}
+      </button>
     </form>
   );
 };

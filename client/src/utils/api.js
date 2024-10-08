@@ -21,9 +21,7 @@ const createMenu = async (menu) => {
 };
 
 const updateMenu = async (menuItem) => {
-  console.log(menuItem);
-  const response = await api.put(`/api/menus/${menuItem.menuId}`, menuItem);
-  console.log(response);
+  const response = await api.put(`/api/menus/${menuItem.id}`, { name: menuItem.name });
   return response.data;
 };
 
