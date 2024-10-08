@@ -1,44 +1,35 @@
-// import React from "react";
-// import Sidebar from "./components/organisms/sideBar.js";
-// import Header from "./components/molecules/header.js";
-// import MenuTree from "./components/molecules/menuTree.jsx";
-// import MenuForm from "./components/molecules/menuForm.jsx";
-
-// function App() {
-//   return (
-//     <div className="flex h-screen">
-//       <Sidebar />
-
-//       <div className="flex-1 flex flex-col bg-gray-100">
-//         <Header />
-
-//         <div className="flex p-4 space-x-4">
-//           <div className="w-1/3 bg-white rounded-md shadow-md">
-//             <MenuTree />
-//           </div>
-
-//           <div className="w-2/3 bg-white rounded-md shadow-md p-4">
-//             <MenuForm />
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default App;
 import React from 'react';
 import Sidebar from './components/organisms/sideBar.js';
 import MenuManager from './components/organisms/menuManager.js';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
+  const { data: menus, isLoading, error } = useMenus();
+  const createMenuMutation = useCreateMenu();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  const handleAddMenu = async () => {
+    const newMenu = { name: 'New Menu', depth: 1, parentId: null, children: [] };
+    createMenuMutation.mutate(newMenu);
+  }
   return (
+    <>
+    <ToastContainer />
     <div className="flex flex-1 flex-col md:flex-row overflow-hidden">
       <Sidebar />
       <div className="flex-1 p-4 bg-gray overflow-y-auto">
-        <MenuManager />
+        <MenuManager  menus={menus} onAddMenu={handleAddMenu} />
       </div>
     </div>
+    </>
   );
 }
 

@@ -1,11 +1,38 @@
 import axios from 'axios';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-export const fetchMenus = async () => {
-  const response = await axios.get('/api/menus'); // Adjust the API endpoint as needed
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000',
+});
+
+const fetchMenus = async () => {
+  const response = await api.get('/api/menus');
   return response.data;
 };
 
-export const createMenu = async (menu) => {
-  const response = await axios.post('/api/menus', menu); // Adjust the API endpoint as needed
+const fetchMenuById = async (id) => {
+  const response = await api.get(`/api/menus/${id}`);
   return response.data;
+};
+
+const createMenu = async (menu) => {
+  const response = await api.post('/api/menus', menu);
+  return response.data;
+};
+
+export const useMenus = () => {
+  return useQuery('menus', fetchMenus);
+};
+
+export const useMenuById = (id) => {
+  return useQuery(['menu', id], () => fetchMenuById(id));
+};
+
+export const useCreateMenu = () => {
+  const queryClient = useQueryClient();
+  return useMutation(createMenu, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('menus');
+    },
+  });
 };
