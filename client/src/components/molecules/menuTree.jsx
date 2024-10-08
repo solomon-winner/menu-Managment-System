@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Tree } from 'antd';
 import { RightOutlined, DownOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -15,23 +15,33 @@ const MenuTree = () => {
   const setExpandedKeys = useSetRecoilState(expandedKeysState);
   const setFormVisibility = useSetRecoilState(formVisibilityState);
   const deleteMenuMutation = useDeleteMenu();
+  const [selectedItem, setSelectedItem] = useState(null); 
+  const [parentItem, setParentItem] = useState(null); 
 
-  console.log('Tree Data:', treeData);
-  
+  console.log('Tree Data:', treeData); 
+
   const handleExpand = (expandedKeys) => {
     setExpandedKeys(expandedKeys);
   };
 
   const handleSelect = (selectedKeys, info) => {
+    setSelectedItem(info.node); 
     setFormVisibility(true);
   };
 
   const handleAddClick = (node) => {
     console.log('Add clicked for node:', node);
+    setParentItem(node); 
+    setFormVisibility(true); 
   };
 
   const handleDeleteClick = (node) => {
-    console.log('Deleting node with key:', node,typeof(node.key));
+    console.log('Deleting node with key:', node, typeof(node.key));
+
+    if (!node.key) {
+      console.error('Node key is undefined');
+      return;
+    }
 
     deleteMenuMutation.mutate(node.key, {
       onSuccess: () => {
@@ -46,6 +56,7 @@ const MenuTree = () => {
             return true;
           });
         };
+
         const updatedData = deleteNode(treeData, node.key);
         setMenus({ data: updatedData });
       },
@@ -57,13 +68,15 @@ const MenuTree = () => {
 
   const titleRender = (node) => (
     <div className="flex justify-between items-center">
-      <span className="mr-4">{node.title}</span> {/* Add margin-right to create space */}
-      <div className="flex space-x-4">
-        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#253BFF] text-white">
-          <PlusOutlined onClick={() => handleAddClick(node)} />
+      <span className="mr-4">{node.title}</span> 
+      {selectedItem && selectedItem.key === node.key && ( 
+        <div className="flex space-x-4">
+          <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#253BFF] text-white">
+            <PlusOutlined onClick={() => handleAddClick(node)} />
+          </div>
+          <DeleteOutlined onClick={() => handleDeleteClick(node)} />
         </div>
-        <DeleteOutlined onClick={() => handleDeleteClick(node)} />
-      </div>
+      )}
     </div>
   );
 
