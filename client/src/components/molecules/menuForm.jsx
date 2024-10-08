@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { selectedItemState, menuState } from '../../state/state';
-import { useCreateMenu } from '../../utils/api';
+import { useUpdateMenu } from '../../utils/api';
 import Input from "../atoms/input.js";
 
 const MenuForm = () => {
   const selectedItem = useRecoilValue(selectedItemState);
   const setMenus = useSetRecoilState(menuState);
-  const createMenuMutation = useCreateMenu();
+  const updateMenuMutation = useUpdateMenu();
   const [menuId, setMenuId] = useState('');
   const [depth, setDepth] = useState(0);
   const [parentData, setParentData] = useState('');
@@ -16,7 +16,8 @@ const MenuForm = () => {
 
   useEffect(() => {
     if (selectedItem) {
-      setMenuId(selectedItem.key);
+      console.log('Selected Item:', selectedItem); // Debugging statement
+      setMenuId(selectedItem.key); 
       setDepth(selectedItem.depth || 0);
       setParentData(selectedItem.parentId || '');
       setName(selectedItem.title || '');
@@ -26,21 +27,31 @@ const MenuForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log('Menu ID:', menuId); 
     const updatedItem = {
-      key: menuId,
-      depth,
-      parentId: parentData,
-      title: name,
+      name, menuId
     };
-
-    createMenuMutation.mutate(updatedItem, {
+    updateMenuMutation.mutate(updatedItem, {
       onSuccess: (data) => {
-        setMenus((prevMenus) => ({
-          data: [...prevMenus.data, data],
-        }));
+        setMenus((prevMenus) => {
+          const updateNode = (data, updatedItem) => {
+            return data.map(item => {
+              if (item.id === updatedItem.id) {
+                return { ...item, title: updatedItem.name }; 
+              }
+              if (item.children) {
+                item.children = updateNode(item.children, updatedItem);
+              }
+              return item;
+            });
+          };
+
+          const updatedData = updateNode(prevMenus.data, updatedItem);
+          return { data: updatedData };
+        });
       },
       onError: (error) => {
-        console.error('Failed to create menu item:', error);
+        console.error('Failed to update menu item:', error);
       },
     });
   };
@@ -54,6 +65,7 @@ const MenuForm = () => {
         onChange={(e) => setMenuId(e.target.value)}
         name={"MenuID"}
         id={"MenuID"}
+        disabled
       />
       <Input
         label={"Depth"}
@@ -62,6 +74,7 @@ const MenuForm = () => {
         onChange={(e) => setDepth(e.target.value)}
         name={"Depth"}
         id={"Depth"}
+        disabled
       />
       <Input
         label={"ParentData"}

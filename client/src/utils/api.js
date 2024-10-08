@@ -20,6 +20,13 @@ const createMenu = async (menu) => {
   return response.data;
 };
 
+const updateMenu = async (menuItem) => {
+  console.log(menuItem);
+  const response = await api.put(`/api/menus/${menuItem.menuId}`, menuItem);
+  console.log(response);
+  return response.data;
+};
+
 const deleteMenu = async (id) => {
   const response = await api.delete(`/api/menus/${id}`);
   return response.data;
@@ -43,6 +50,16 @@ export const useCreateMenu = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createMenu,
+    onSuccess: () => {
+      queryClient.invalidateQueries('menus');
+    },
+  });
+};
+
+export const useUpdateMenu = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateMenu,
     onSuccess: () => {
       queryClient.invalidateQueries('menus');
     },
