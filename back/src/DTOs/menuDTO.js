@@ -10,6 +10,7 @@ class MenuDTO {
       return new MenuDTO({
         id: menuItem._id,
         name: menuItem.name,
+        depth: menuItem.depth,
         parentId: menuItem.parentId,
         children: menuItem.children,
       });
