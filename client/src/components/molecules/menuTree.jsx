@@ -7,7 +7,8 @@ import { transformMenuData } from '../../utils/transformData';
 
 const MenuTree = () => {
   const menus = useRecoilValue(menuState);
-  const treeData = transformMenuData(menus);
+  const treeData = Array.isArray(menus.data) ? transformMenuData(menus.data) : [];
+  console.log(menus.data, "from tree");
 
   return (
     <div className="p-4">

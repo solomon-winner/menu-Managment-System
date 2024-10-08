@@ -1,10 +1,10 @@
 import React from 'react';
-import { useMenus } from './hooks/useMenus';
+import { useMenuItems } from './hooks/useMenuItem';
 import Sidebar from './components/organisms/sideBar';
 import MenuManager from './components/organisms/menuManager';
 
 function App() {
-  const { menus, isLoading, error } = useMenus();
+  const { menus, isLoading, error } = useMenuItems();
 
   if (isLoading) {
     return <div>Loading...</div>;

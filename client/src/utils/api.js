@@ -21,16 +21,23 @@ const createMenu = async (menu) => {
 };
 
 export const useMenus = () => {
-  return useQuery('menus', fetchMenus);
+  return useQuery({
+    queryKey: 'menus',
+    queryFn: fetchMenus,
+  });
 };
 
 export const useMenuById = (id) => {
-  return useQuery(['menu', id], () => fetchMenuById(id));
+  return useQuery({
+    queryKey: ['menu', id],
+    queryFn: () => fetchMenuById(id),
+  });
 };
 
 export const useCreateMenu = () => {
   const queryClient = useQueryClient();
-  return useMutation(createMenu, {
+  return useMutation({
+    mutationFn: createMenu,
     onSuccess: () => {
       queryClient.invalidateQueries('menus');
     },

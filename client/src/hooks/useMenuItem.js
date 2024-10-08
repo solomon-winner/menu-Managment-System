@@ -1,17 +1,17 @@
 import { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { useQuery } from '@tanstack/react-query';
-import { fetchMenus } from '../utils/api';
+import { useMenus } from '../utils/api';
 import { menuState } from '../state/state';
 
-export const useMenus = () => {
+export const useMenuItems = () => {
   const setMenus = useSetRecoilState(menuState);
-
-  const { data, isLoading, error } = useQuery('menus', fetchMenus, {
-    onSuccess: (data) => {
+  const { data, isLoading, error } = useMenus();
+  console.log(data, "from hooks");
+  useEffect(() => {
+    if (data) {
       setMenus(data);
-    },
-  });
+    }
+  }, [data, setMenus]);
 
   return { menus: data, isLoading, error };
 };
