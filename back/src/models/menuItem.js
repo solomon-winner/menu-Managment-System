@@ -11,7 +11,7 @@ const menuItemSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    parentData: {
+    parentId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'MenuItem',
         default: null,

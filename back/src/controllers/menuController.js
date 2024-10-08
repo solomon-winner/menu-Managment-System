@@ -1,10 +1,12 @@
 import MenuItem from '../models/menuItem.js';
 import ResponseHelper from '../utils/responseHelper.js';
+import MenuDTO from '../DTOs/menuDTO.js';
 
 export const getMenus = async (req, res, next) => {
     try {
         const menus = await MenuItem.find().populate('children');
-        return ResponseHelper.success(res, 'Menus retrieved successfully', menus);
+        const menuDTOs = MenuDTO.fromMenuItems(menus);
+        return ResponseHelper.success(res, 'Menus retrieved successfully', menuDTOs);
     } catch (error) {
         next(error);
     }
@@ -17,7 +19,8 @@ export const getMenu = async (req, res, next) => {
         if (!menu) {
             return next(new NotFoundError('Menu not found'));
         }
-        return ResponseHelper.success(res, 'Menu retrieved successfully', menu);
+        const menuDTO = MenuDTO.fromMenuItem(menu);
+        return ResponseHelper.success(res, 'Menu retrieved successfully', menuDTO);
     } catch (error) {
         next(error);
     }
@@ -25,6 +28,10 @@ export const getMenu = async (req, res, next) => {
 
 export const addMenuItem = async (req, res, next) => {
     const { name, parentId } = req.body;
+    if (!name) {
+        return next(new BadRequestError('Name is required'));
+    }
+
     const newMenuItem = new MenuItem({ name, parentId });
 
     try {
@@ -37,22 +44,29 @@ export const addMenuItem = async (req, res, next) => {
             parent.children.push(savedMenuItem._id);
             await parent.save();
         }
-        return ResponseHelper.success(res, 'Menu item added successfully', savedMenuItem, 201);
+        const menuDTO = MenuDTO.fromMenuItem(savedMenuItem);
+        return ResponseHelper.success(res, 'Menu item added successfully', menuDTO, 201);
     } catch (error) {
         next(error);
     }
 };
 
+
 export const updateMenuItem = async (req, res, next) => {
     const { id } = req.params;
     const { name } = req.body;
+
+    if (!name) {
+        return next(new BadRequestError('Name is required'));
+    }
 
     try {
         const updatedMenuItem = await MenuItem.findByIdAndUpdate(id, { name }, { new: true });
         if (!updatedMenuItem) {
             return next(new NotFoundError('Menu item not found'));
         }
-        return ResponseHelper.success(res, 'Menu item updated successfully', updatedMenuItem);
+        const menuDTO = MenuDTO.fromMenuItem(updatedMenuItem);
+        return ResponseHelper.success(res, 'Menu item updated successfully', menuDTO);
     } catch (error) {
         next(error);
     }
