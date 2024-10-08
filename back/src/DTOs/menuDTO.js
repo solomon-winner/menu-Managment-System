@@ -1,6 +1,6 @@
 class MenuDTO {
-    constructor({ menuId, name, parentId, depth, children }) {
-      this.id = menuId;
+    constructor({ _id, name, parentId, depth, children }) {
+      this._id = _id;
       this.name = name;
       this.parentId = parentId;
       this.depth = depth,
@@ -8,8 +8,9 @@ class MenuDTO {
     }
   
     static fromMenuItem(menuItem) {
+      console.log("DTO________>", menuItem)
       return new MenuDTO({
-        id: menuItem._id,
+        _id: menuItem._id,
         name: menuItem.name,
         depth: menuItem.depth,
         parentId: menuItem.parentId,

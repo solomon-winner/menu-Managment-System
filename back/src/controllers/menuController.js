@@ -27,25 +27,25 @@ export const getMenu = async (req, res, next) => {
 };
 
 export const addMenuItem = async (req, res, next) => {
-    const { name, menuId, parentId, depth } = req.body;
-    if (!name || !menuId) {
+    const { name, parentId, depth } = req.body;
+    if (!name) {
         return next(new BadRequest('Name is required'));
     }
 
-    const newMenuItem = new MenuItem({ name, menuId, parentId, depth });
+    const newMenuItem = new MenuItem({ name, depth, parentId });
 
     try {
+        const savedMenuItem = await newMenuItem.save();
         if (parentId) {
             const parent = await MenuItem.findById(parentId);
             if (!parent) {
                 return next(new NotFound('Parent menu not found'));
             }
-            parent.children.push(menuId);
+            parent.children.push(savedMenuItem._id);
             await parent.save();
-            return ResponseHelper.success(res, 'Menu item added successfully', menuDTO, 201);
         }
-        const savedMenuItem = await newMenuItem.save();
         const menuDTO = MenuDTO.fromMenuItem(savedMenuItem);
+        console.log("........._______", menuDTO)
         return ResponseHelper.success(res, 'Menu item added successfully', menuDTO, 201);
     } catch (error) {
         next(error);
