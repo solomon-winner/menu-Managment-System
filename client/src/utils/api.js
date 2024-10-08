@@ -20,6 +20,11 @@ const createMenu = async (menu) => {
   return response.data;
 };
 
+const deleteMenu = async (id) => {
+  const response = await api.delete(`/api/menus/${id}`);
+  return response.data;
+};
+
 export const useMenus = () => {
   return useQuery({
     queryKey: 'menus',
@@ -38,6 +43,16 @@ export const useCreateMenu = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createMenu,
+    onSuccess: () => {
+      queryClient.invalidateQueries('menus');
+    },
+  });
+};
+
+export const useDeleteMenu = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteMenu,
     onSuccess: () => {
       queryClient.invalidateQueries('menus');
     },
