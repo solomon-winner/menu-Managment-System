@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Tree } from 'antd';
 import { RightOutlined, DownOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { menuState } from '../../state/state';
+import { menuState, expandedKeysState, formVisibilityState, selectedItemState } from '../../state/state';
 import { transformMenuData } from '../../utils/transformData';
-import { expandedKeysState, formVisibilityState } from '../../state/visibilityState';
 import { useDeleteMenu } from '../../utils/api';
 
 const MenuTree = () => {
@@ -14,35 +13,44 @@ const MenuTree = () => {
   const expandedKeys = useRecoilValue(expandedKeysState);
   const setExpandedKeys = useSetRecoilState(expandedKeysState);
   const setFormVisibility = useSetRecoilState(formVisibilityState);
+  const selectedItem = useRecoilValue(selectedItemState); 
+  const setSelectedItem = useSetRecoilState(selectedItemState);
   const deleteMenuMutation = useDeleteMenu();
-  const [selectedItem, setSelectedItem] = useState(null); 
   const [parentItem, setParentItem] = useState(null); 
-
+  const [depth, setDepth] = useState(0); 
+  
   console.log('Tree Data:', treeData); 
-
+  
+  const calculateDepth = (node, currentDepth = 0) => {
+    if (!node.parentId) return currentDepth;
+    const parentNode = treeData.find(item => item.key === node.parentId);
+    return calculateDepth(parentNode, currentDepth + 1);
+  };
+  
   const handleExpand = (expandedKeys) => {
     setExpandedKeys(expandedKeys);
   };
-
+  
   const handleSelect = (selectedKeys, info) => {
     setSelectedItem(info.node); 
     setFormVisibility(true);
   };
-
+  
   const handleAddClick = (node) => {
     console.log('Add clicked for node:', node);
     setParentItem(node); 
+    setDepth(calculateDepth(node) + 1); 
     setFormVisibility(true); 
   };
-
+  
   const handleDeleteClick = (node) => {
     console.log('Deleting node with key:', node, typeof(node.key));
-
+  
     if (!node.key) {
       console.error('Node key is undefined');
       return;
     }
-
+  
     deleteMenuMutation.mutate(node.key, {
       onSuccess: () => {
         const deleteNode = (data, key) => {
@@ -56,7 +64,7 @@ const MenuTree = () => {
             return true;
           });
         };
-
+  
         const updatedData = deleteNode(treeData, node.key);
         setMenus({ data: updatedData });
       },
@@ -65,10 +73,10 @@ const MenuTree = () => {
       },
     });
   };
-
+  
   const titleRender = (node) => (
     <div className="flex justify-between items-center">
-      <span className="mr-4">{node.title}</span> 
+      <span className="mr-4">{node.title}</span>
       {selectedItem && selectedItem.key === node.key && ( 
         <div className="flex space-x-4">
           <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#253BFF] text-white">
@@ -79,7 +87,7 @@ const MenuTree = () => {
       )}
     </div>
   );
-
+  
   return (
     <div className="p-4">
       <Tree
