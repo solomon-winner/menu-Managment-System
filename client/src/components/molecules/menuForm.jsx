@@ -113,7 +113,7 @@ const MenuForm = () => {
         name={"Name"}
       />
       <button className="bg-[#253BFF] text-white p-2 mt-4 rounded-2xl w-[20rem]">
-        {menuId ? 'Update' : 'Add'}
+        {menuId ? 'Update' : 'Save'}
       </button>
     </form>
   );
