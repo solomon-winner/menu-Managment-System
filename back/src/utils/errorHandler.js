@@ -2,12 +2,11 @@ import ResponseHelper from './responseHelper.js';
 import createError from 'http-errors';
 import { logger } from './logger.js'; 
 
-const { NotFound, BadRequest } = createError;
 export const errorHandler = (err, req, res, next) => {
-    if (err instanceof NotFound) {
+    if (err instanceof createError.NotFound) {
         return ResponseHelper.error(res, 'Resource not found', [], 404);
     }
-    if (err instanceof BadRequest) {
+    if (err instanceof createError.BadRequest) {
         return ResponseHelper.error(res, err.message, [], err.statusCode);
     }
 
@@ -19,4 +18,3 @@ export const errorHandler = (err, req, res, next) => {
 
     return ResponseHelper.error(res, 'Internal server error', [], 500);
 };
-

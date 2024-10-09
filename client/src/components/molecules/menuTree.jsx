@@ -18,32 +18,26 @@ const MenuTree = () => {
   const deleteMenuMutation = useDeleteMenu();
   const [parentItem, setParentItem] = useState(null); 
   const [depth, setDepth] = useState(0); 
-  const setFormType = useSetRecoilState(formTypeState); // Use Recoil state for form type
-
-  const calculateDepth = (node, currentDepth = 0) => {
-    if (!node.parentId) return currentDepth;
-    const parentNode = treeData.find(item => item.key === node.parentId);
-    return calculateDepth(parentNode, currentDepth + 1);
-  };
+  const setFormType = useSetRecoilState(formTypeState); 
 
   const handleExpand = (expandedKeys) => {
     setExpandedKeys(expandedKeys);
   };
 
   const handleSelect = (selectedKeys, info) => {
-    setSelectedItem(info.node); 
     setFormVisibility(true);
-    setParentItem(info.node); 
-    setDepth(calculateDepth(info.node) + 1); 
-    setFormType('update'); // Set form type to update
-    console.log("parent item", parentItem, depth);
+    setParentItem(info.node);
+    console.log("info", info.node); 
+    setDepth(info.node.depth);
+    setSelectedItem(info.node);  
+    setFormType('update'); 
   };
 
   const handleAddClick = (e) => {
-    e.stopPropagation(); // Stop event propagation
-    setSelectedItem({ parentId: parentItem.key, depth: depth });
+    e.stopPropagation(); 
+    setSelectedItem({ parentId: parentItem.key, depth: depth + 1});
     setFormVisibility(true); 
-    setFormType('add'); // Set form type to add
+    setFormType('add'); 
     console.log('Add clicked for node:', selectedItem);
   };
 
@@ -69,6 +63,7 @@ const MenuTree = () => {
 
         const updatedData = deleteNode(treeData, node.key);
         setMenus({ data: updatedData });
+        setSelectedItem(null);
       },
       onError: (error) => {
         console.error('Failed to delete node:', error);

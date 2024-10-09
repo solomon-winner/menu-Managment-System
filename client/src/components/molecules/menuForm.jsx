@@ -6,6 +6,7 @@ import Input from "../atoms/input.js";
 
 const MenuForm = () => {
   const selectedItem = useRecoilValue(selectedItemState);
+  const menus = useRecoilValue(menuState);
   const setMenus = useSetRecoilState(menuState);
   const updateMenuMutation = useUpdateMenu();
   const createMenuMutation = useCreateMenu();
@@ -38,7 +39,7 @@ const MenuForm = () => {
       depth,
       ...(parentData && { parentId: parentData }),
     };
-
+    console.log("menu item", menus);
     if (menuId !== "" ) {
       updateMenuMutation.mutate({ id: menuId, name }, {
         onSuccess: (data) => {
@@ -112,6 +113,7 @@ const MenuForm = () => {
         value={name}
         onChange={(e) => setName(e.target.value)}
         name={"Name"}
+        required
       />
       <button className="bg-[#253BFF] text-white p-2 mt-4 rounded-2xl w-[20rem]">
         {menuId ? 'Update' : 'Save'}
