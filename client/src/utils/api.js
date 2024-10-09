@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 
 const api = axios.create({
-  baseURL: process.env.API_URL,
+  baseURL: process.env.API_URL || "https://menu-managment-system.onrender.com",
 });
 
 const fetchMenus = async () => {
