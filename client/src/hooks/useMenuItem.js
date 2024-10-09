@@ -6,7 +6,6 @@ import { menuState } from '../state/state';
 export const useMenuItems = () => {
   const setMenus = useSetRecoilState(menuState);
   const { data, isLoading, error } = useMenus();
-  console.log(data, "from hooks");
   useEffect(() => {
     if (data) {
       setMenus(data);

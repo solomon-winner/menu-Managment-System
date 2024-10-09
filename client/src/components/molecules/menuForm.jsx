@@ -39,7 +39,6 @@ const MenuForm = () => {
       depth,
       ...(parentData && { parentId: parentData }),
     };
-    console.log("menu item", menus);
     if (menuId !== "" ) {
       updateMenuMutation.mutate({ id: menuId, name }, {
         onSuccess: (data) => {
@@ -57,6 +56,7 @@ const MenuForm = () => {
             };
 
             const updatedData = updateNode(prevMenus.data, { id: menuId, name });
+          
             return { data: updatedData };
           });
         },

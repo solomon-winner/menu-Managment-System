@@ -27,7 +27,6 @@ const MenuTree = () => {
   const handleSelect = (selectedKeys, info) => {
     setFormVisibility(true);
     setParentItem(info.node);
-    console.log("info", info.node); 
     setDepth(info.node.depth);
     setSelectedItem(info.node);  
     setFormType('update'); 
@@ -38,7 +37,6 @@ const MenuTree = () => {
     setSelectedItem({ parentId: parentItem.key, depth: depth + 1});
     setFormVisibility(true); 
     setFormType('add'); 
-    console.log('Add clicked for node:', selectedItem);
   };
 
   const handleDeleteClick = (node) => {  

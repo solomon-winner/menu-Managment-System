@@ -17,7 +17,6 @@ const MenuManager = () => {
   if (menus.data.length === 0) {
     setFormVisible(true);
   }
-  console.log(",,,,,,,,,,,,,,,,",menus);
   return (
     <div className="p-4 overflow-x-hidden">
       <BreadCram />
