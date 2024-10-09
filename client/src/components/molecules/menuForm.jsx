@@ -35,8 +35,8 @@ const MenuForm = () => {
     e.preventDefault();
     const menuItem = {
       name,
-      parentId: parentData,
       depth,
+      ...(parentData && { parentId: parentData }),
     };
 
     if (menuId !== "" ) {
@@ -69,6 +69,7 @@ const MenuForm = () => {
           setMenus((prevMenus) => ({
             data: [...prevMenus.data, data],
           }));
+          setMenuId("");
         },
         onError: (error) => {
           console.error('Failed to add menu item:', error);

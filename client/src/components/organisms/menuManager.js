@@ -2,12 +2,22 @@ import { BsFillGridFill } from "react-icons/bs";
 import BreadCram from "../atoms/breadCrumb";
 import MenuForm from "../molecules/menuForm";
 import MenuLeft from "../molecules/menuLeft";
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue , useSetRecoilState} from 'recoil';
 import { formVisibilityState } from '../../state/visibilityState';
+import { menuState } from '../../state/state';
+import { useState } from "react";
 
 const MenuManager = () => {
+  const [form, setForm] = useState(false);
   const isFormVisible = useRecoilValue(formVisibilityState);
-  console.log("isf",isFormVisible);
+  const setFormVisible = useSetRecoilState(formVisibilityState);
+
+  const menus = useRecoilValue(menuState);
+
+  if (menus.data.length === 0) {
+    setFormVisible(true);
+  }
+  console.log(",,,,,,,,,,,,,,,,",menus);
   return (
     <div className="p-4 overflow-x-hidden">
       <BreadCram />

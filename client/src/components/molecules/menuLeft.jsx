@@ -7,6 +7,7 @@ import { menuState } from '../../state/state';
 
 const MenuLeft = () => {
   const menus = useRecoilValue(menuState);
+  // const selectedItem = useRecoilValue(selectedItemState);
   const treeData = Array.isArray(menus.data) ? transformMenuData(menus.data) : [];
   const setExpandedKeys = useSetRecoilState(expandedKeysState);
   const handleExpandAll = () => {
@@ -27,7 +28,6 @@ const MenuLeft = () => {
   const handleCollapseAll = () => {
     setExpandedKeys([]);
   };
-
   return (
     <div>
       <div className="text-sm">
