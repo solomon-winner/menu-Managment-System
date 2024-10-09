@@ -1,11 +1,15 @@
 import MenuItem from '../models/menuItem.js';
 import ResponseHelper from '../utils/responseHelper.js';
 import MenuDTO from '../DTOs/menuDTO.js';
+import { populateChildren } from '../utils/populateHelper.js';
 
 export const getMenus = async (req, res, next) => {
     try {
-        const menus = await MenuItem.find().populate('children');
-        const rootMenus = menus.filter(menu => !menu.parentId); // Filter root menus
+        const menus = await MenuItem.find();
+        for (const menu of menus) {
+            await populateChildren(menu);
+        }
+        const rootMenus = menus.filter(menu => !menu.parentId);
         const menuDTOs = MenuDTO.fromMenuItems(rootMenus);
         return ResponseHelper.success(res, 'Menus retrieved successfully', menuDTOs);
     } catch (error) {
@@ -16,10 +20,11 @@ export const getMenus = async (req, res, next) => {
 export const getMenu = async (req, res, next) => {
     const { id } = req.params;
     try {
-        const menu = await MenuItem.findById(id).populate('children');
+        const menu = await MenuItem.findById(id);
         if (!menu) {
-            return next(new NotFoundError('Menu not found'));
+            return next(new NotFound('Menu not found'));
         }
+        await populateChildren(menu);
         const menuDTO = MenuDTO.fromMenuItem(menu);
         return ResponseHelper.success(res, 'Menu retrieved successfully', menuDTO);
     } catch (error) {

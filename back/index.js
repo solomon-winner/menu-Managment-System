@@ -5,12 +5,14 @@ import { dbConfig } from './src/config/dbConfig.js';
 import {errorHandler} from './src/utils/errorHandler.js';
 import MenuRoutes from './src/routes/menuRoutes.js';
 import swaggerDocs from './src/config/swaggerConfig.js';
+import bodyParser from 'body-parser';
 
 dotenv.config();
 
 const app = express();
 const port  = process.env.PORT || 5000;
 
+app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors());
 
