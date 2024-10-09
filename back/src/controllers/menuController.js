@@ -5,7 +5,8 @@ import MenuDTO from '../DTOs/menuDTO.js';
 export const getMenus = async (req, res, next) => {
     try {
         const menus = await MenuItem.find().populate('children');
-        const menuDTOs = MenuDTO.fromMenuItems(menus);
+        const rootMenus = menus.filter(menu => !menu.parentId); // Filter root menus
+        const menuDTOs = MenuDTO.fromMenuItems(rootMenus);
         return ResponseHelper.success(res, 'Menus retrieved successfully', menuDTOs);
     } catch (error) {
         next(error);
@@ -45,7 +46,6 @@ export const addMenuItem = async (req, res, next) => {
             await parent.save();
         }
         const menuDTO = MenuDTO.fromMenuItem(savedMenuItem);
-        console.log("........._______", menuDTO)
         return ResponseHelper.success(res, 'Menu item added successfully', menuDTO, 201);
     } catch (error) {
         next(error);
@@ -72,6 +72,7 @@ export const updateMenuItem = async (req, res, next) => {
         next(error);
     }
 };
+
 export const deleteMenuItem = async (req, res, next) => {
     const { id } = req.params;
 
