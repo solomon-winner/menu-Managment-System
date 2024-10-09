@@ -13,7 +13,7 @@ const app = express();
 const port  = process.env.PORT || 5000;
 
 const corsOptions = {
-    origin: 'https://menu-managment-system.vercel.app/', 
+    origin: '', 
     methods: 'GET,PUT,PATCH,POST,DELETE',
     credentials: true,
     optionsSuccessStatus: 204
