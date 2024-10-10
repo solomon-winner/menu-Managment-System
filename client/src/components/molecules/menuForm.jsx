@@ -105,7 +105,7 @@ const MenuForm = () => {
         value={parentData}
         onChange={(e) => setParentData(e.target.value)}
         name={"ParentData"}
-        disabled={!hasParent}
+        disabled
       />
       <Input
         label={"Name"}
