@@ -43,10 +43,8 @@ const SideBar = () => {
         {isOpen && (
           <div className="absolute top-0 left-0 w-56 h-[91%] bg-primary rounded-xl m-2 text-white py-3 px-4">
             <div className="flex justify-between items-center">
-              <h1 className="">
-                <span className="underline font-bold">CLo</span>IT
-              </h1>
-              <MdMenuOpen onClick={handleToggle} className="cursor-pointer" />
+            <img src="./assets/image.png" alt="logo" className="w-[70px] h-[21px] mt-2"/>
+            <MdMenuOpen onClick={handleToggle} className="cursor-pointer" />
             </div>
             <div className="mt-5">
               {menuItems.map((item) => (
@@ -62,9 +60,7 @@ const SideBar = () => {
   return (
     <div className={`w-56 h-[42rem] bg-primary rounded-xl m-2 text-white py-3 px-4 ${isOpen ? "" : "hidden md:block"}`}>
       <div className="flex justify-between items-center">
-        <h1 className="">
-          <span className="underline font-bold">CLo</span>IT
-        </h1>
+      <img src="./assets/image.png" alt="logo" className="w-[70px] h-[21px] mt-2"/>
         <MdMenuOpen onClick={handleToggle} className="cursor-pointer" />
       </div>
       <div className="mt-5">
