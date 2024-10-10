@@ -58,7 +58,7 @@ const SideBar = () => {
   }
 
   return (
-    <div className={`w-56 h-[42rem] bg-primary rounded-xl m-2 text-white py-3 px-4 ${isOpen ? "z-[10]" : "hidden md:block"}`}>
+    <div className={`w-56 h-[42rem] bg-primary rounded-xl m-2 text-white py-3 px-4 ${isOpen ? "z-[1000]" : "hidden md:block"}`}>
       <div className="flex justify-between items-center">
       <img src="./assets/image.png" alt="logo" className="w-[70px] h-[21px] mt-2"/>
         <MdMenuOpen onClick={handleToggle} className="cursor-pointer" />
